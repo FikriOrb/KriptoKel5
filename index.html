@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GF(2) Inverse Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="top-nav">
+      <a class="brand" href="#calculator" aria-label="GF(2) Calculator home">
+        <span class="brand-mark" aria-hidden="true">GF</span>
+        <span>GF(2) Calculator</span>
+      </a>
+      <nav class="nav-links" aria-label="Navigasi utama">
+        <a href="#calculator">Calculator</a>
+        <a href="#iterations">Iterations</a>
+        <a href="#reference">Reference</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-band">
+        <div class="hero-content">
+          <span class="badge-pill">Extended Euclidean Algorithm</span>
+          <h1>Polynomial inverse in GF(2)</h1>
+          <p>
+            Hitung inverse polinomial biner terhadap modulus AES atau modulus pilihan,
+            lengkap dengan pembagian bersusun dan jejak koefisien setiap iterasi.
+          </p>
+        </div>
+
+        <div class="hero-mockup" aria-label="Pratinjau alur algoritma">
+          <div class="mockup-toolbar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <pre><code>r0 = 100011011
+r1 = 01010011
+while r1 != 0:
+  q, r = div(r0, r1)
+  t = t0 XOR q * t1
+  r0, r1 = r1, r</code></pre>
+        </div>
+      </section>
+
+      <section class="app-shell" id="calculator" aria-labelledby="calculator-title">
+        <div class="panel input-panel">
+          <div class="section-heading">
+            <span class="badge-pill">Input</span>
+            <h2 id="calculator-title">Cari inverse</h2>
+            <p>Masukkan bit tertinggi lebih dulu. Contoh modulus AES: <code>100011011</code>.</p>
+          </div>
+
+          <form id="gf2-form" novalidate>
+            <label for="modulus">Irreducible polynomial / modulus</label>
+            <input
+              id="modulus"
+              name="modulus"
+              class="text-input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              spellcheck="false"
+              value="100011011"
+              aria-describedby="modulus-help"
+            >
+            <p class="field-help" id="modulus-help">Modulus tidak boleh nol dan idealnya lebih panjang dari polinomial input.</p>
+
+            <label for="element">Polynomial yang dicari inverse-nya</label>
+            <input
+              id="element"
+              name="element"
+              class="text-input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              spellcheck="false"
+              value="01010011"
+              aria-describedby="element-help"
+            >
+            <p class="field-help" id="element-help">Hanya digit biner 0 dan 1. Leading zero akan dinormalisasi.</p>
+
+            <div class="form-actions">
+              <button type="submit" class="button-primary">Calculate inverse</button>
+              <button type="button" class="button-secondary" id="load-aes">Load AES example</button>
+            </div>
+            <p class="form-error" id="form-error" role="alert" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="panel result-panel" aria-live="polite">
+          <div class="section-heading">
+            <span class="badge-pill">Result</span>
+            <h2>Hasil komputasi</h2>
+            <p>Representasi biner, derajat polinomial, dan status GCD.</p>
+          </div>
+
+          <dl class="result-grid">
+            <div>
+              <dt>GCD</dt>
+              <dd id="result-gcd">-</dd>
+            </div>
+            <div>
+              <dt>Inverse</dt>
+              <dd id="result-inverse">-</dd>
+            </div>
+            <div>
+              <dt>Polynomial form</dt>
+              <dd id="result-polynomial">-</dd>
+            </div>
+            <div>
+              <dt>Field degree</dt>
+              <dd id="result-field-degree">-</dd>
+            </div>
+            <div>
+              <dt>Input degree</dt>
+              <dd id="result-input-degree">-</dd>
+            </div>
+            <div>
+              <dt>Check</dt>
+              <dd id="result-check">-</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="iterations-band" id="iterations" aria-labelledby="iterations-title">
+        <div class="section-heading">
+          <span class="badge-pill">Audit log</span>
+          <h2 id="iterations-title">Iterasi Extended Euclidean</h2>
+          <p>Setiap baris memperlihatkan pembagian <code>r0 / r1</code>, residue, dan pembaruan koefisien inverse.</p>
+        </div>
+        <div class="iteration-list" id="iteration-list"></div>
+      </section>
+
+      <section class="reference-band" id="reference" aria-labelledby="reference-title">
+        <div class="reference-copy">
+          <span class="badge-pill">Reference</span>
+          <h2 id="reference-title">Aturan GF(2)</h2>
+          <p>
+            Penjumlahan dan pengurangan polinomial sama-sama memakai XOR. Perkalian
+            dilakukan dengan shift sesuai pangkat lalu dijumlahkan XOR.
+          </p>
+        </div>
+        <div class="code-block">
+          <pre><code>add(a, b) = a XOR b
+subtract(a, b) = a XOR b
+inverse(a) exists when gcd(modulus, a) = 1</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
